@@ -1,10 +1,17 @@
+ifeq ($(OS), Windows_NT)
+	COMPOSE_CFG=docker-compose-win.yml
+else
+	COMPOSE_CFG=docker-compose.yml
+endif
+
 all: bake
 
 bake:
-	@docker buildx bake --file ./bake.hcl
+	@docker buildx bake base
+	@docker buildx bake ansible terraform
 
 caac:
-	@docker compose run --rm ansible
+	@docker compose --file ${COMPOSE_CFG} run --rm ansible
 
 iaac:
-	@docker compose run --rm terraform
+	@docker compose --file ${COMPOSE_CFG} run --rm terraform
