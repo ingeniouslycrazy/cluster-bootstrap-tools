@@ -1,0 +1,16 @@
+services:
+  ansible:
+    image: ingeniouslycrazy/ansible:latest
+    init: false
+    volumes:
+      - ./ansible:/ansible
+      - ./.secrets:/.secrets
+      - ./oci/ansible/known_hosts:/root/.ssh/known_hosts
+    env_file: .secrets/.ansible_env
+  terraform:
+    image: ingeniouslycrazy/terraform:latest
+    init: false
+    volumes:
+      - ./terraform:/terraform
+      - ./.tfstate:/.state
+    env_file: .secrets/.tf_env

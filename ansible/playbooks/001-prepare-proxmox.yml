@@ -1,0 +1,7 @@
+- name: Prepare proxmox
+  hosts: node01
+  gather_facts: false
+  roles:
+    - name: Create service-account on Proxmox node
+      role: proxmox_service_accout
+
