@@ -4,10 +4,9 @@ else
 	COMPOSE_CFG=docker-compose.yml
 endif
 
-all: bake
+all: bake run
 
 bake:
-	@docker buildx bake --file bake.hcl clt
-
+	@docker buildx bake clt
 run:
-	@docker compose run --rm clt
+	@docker compose -f ${COMPOSE_CFG} run --rm clt
