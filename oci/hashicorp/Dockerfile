@@ -16,6 +16,6 @@ RUN apk add --update --virtual .deps --no-cache gnupg && \
     rm -f /tmp/${PRODUCT}_${VERSION}_linux_amd64.zip ${PRODUCT}_${VERSION}_SHA256SUMS ${VERSION}/${PRODUCT}_${VERSION}_SHA256SUMS.sig && \
     apk del .deps
 
-# Local ansible plays
+# Local product files
 COPY ./$PRODUCT /${PRODUCT}
 WORKDIR /${PRODUCT}

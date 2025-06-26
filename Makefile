@@ -7,11 +7,7 @@ endif
 all: bake
 
 bake:
-	@docker buildx bake base
-	@docker buildx bake ansible terraform
+	@docker buildx bake --file bake.hcl clt
 
-caac:
-	@docker compose --file ${COMPOSE_CFG} run --rm ansible
-
-iaac:
-	@docker compose --file ${COMPOSE_CFG} run --rm terraform
+run:
+	@docker compose run --rm clt

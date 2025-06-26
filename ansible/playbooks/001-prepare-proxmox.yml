@@ -1,7 +1,13 @@
-- name: Prepare proxmox
-  hosts: node01
+- name: Preflight check
+  hosts: node01,localhost
   gather_facts: false
-  roles:
-    - name: Create service-account on Proxmox node
-      role: proxmox_service_accout
-
+  tasks:
+    - name: Test terraform
+      shell: terraform --version
+      register: tf_version
+      failed_when: "'Terraform' not in tf_version.stdout"
+      changed_when: false
+      delegate_to: localhost
+    - name: Test SSH connection to VM Management
+      ping:
+      delegate_to: node01

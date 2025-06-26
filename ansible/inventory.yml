@@ -4,4 +4,5 @@ proxmox:
       ansible_connection: ssh
       ansible_host: node01.cluster01.ingeniouslycrazy.com
       ansible_user: root
+      ansible_password: "{{ node_initial_root_password }}"
       ansible_port: 2222

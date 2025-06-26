@@ -1,1 +1,1 @@
-[node01.cluster01.ingeniouslycrazy.com]:2222 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMFHZKYxTzGsOy571xCTvdtWSF8LsCPMXeiwXdU7Xplz
+[node01.cluster01.ingeniouslycrazy.com]:2222 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBABbrg1MGaC8VzDG8qpOKVFTbGa9M7ur+zjk21Nfv1i8W6aLhg02ff1ZGis8kUcDc+qL/O7iZEAtiXOKYO3Tb9s=

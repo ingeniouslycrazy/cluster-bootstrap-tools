@@ -28,3 +28,16 @@ target "terraform" {
   ]
   inherits = ["base"]
 }
+
+target "clt" {
+  context = "."
+  dockerfile = "./oci/clt/Dockerfile"
+  args = {
+    TERRAFORM_VERSION = "1.12.2"
+  }
+  tags = [
+    "ingeniouslycrazy/bootstrap-clt:latest",
+    "ingeniouslycrazy/bootstrap-clt:1.0.0"
+  ]
+  inherits = ["base"]
+}
