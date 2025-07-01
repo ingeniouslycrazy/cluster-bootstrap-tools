@@ -1,0 +1,68 @@
+- ansible.builtin.debug:
+    msg: "Preparing Proxmox for development environment"
+
+- name: Install python3-proxmoxer
+  ansible.builtin.apt:
+    name: python3-proxmoxer
+    state: present
+    update_cache: yes
+
+- name: Create ansible user
+  ansible.builtin.include_role:
+    name: linux_user
+  vars:
+    user_group_name: admins
+    user_name: ansible
+    user_ssh_key: "{{ lookup('file', '/srv/secrets/ansible_id_rsa.pub') }}"
+    user_state: present
+
+- name: Check if API user is ready
+  stat:
+    path: /etc/pve/priv/token.cfg
+  register: tokens
+  
+- name: Prepare API user
+  block:
+
+    - name: Create user for terraform
+      shell: |
+        pveum role add TerraformProv -privs "Datastore.AllocateSpace Datastore.AllocateTemplate Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
+        pveum user add terraform-prov@pve --password {{ lookup('ansible.builtin.password', '/srv/secrets/terraform_password', chars=['ascii_letters', 'digits', 'punctuation']) }}
+        pveum aclmod / -user terraform-prov@pve -role TerraformProv
+        pveum user token add terraform-prov@pve terraform2api
+      args:
+        creates: /etc/pve/priv/token.cfg
+
+    - name: Update localhost env file
+      ansible.builtin.lineinfile:
+        path: /srv/export/.cltenv
+        regexp: "{{ item.regex }}"
+        line: "{{ item.value }}"
+      delegate_to: localhost
+      loop:
+        - regex: '^PM_API_URL='
+          value: PM_API_URL="https://node01.cluster01.ingeniouslycrazy.com:8006/api2/json"
+        - regex: '^PM_USER='
+          value: PM_USER="terraform-prov@pve"
+        - regex: '^PM_PASS='
+          value: "PM_PASS={{ lookup('ansible.builtin.password', '/srv/secrets/terraform_password', chars=['ascii_letters', 'digits', 'punctuation']) }}"
+        - regex: '^PM_API_TOKEN_ID='
+          value: PM_API_TOKEN_ID="terraform2api"
+        - regex: '^PM_API_TOKEN_SECRET='
+          value: 'PM_API_TOKEN_SECRET="{{ api_token.stdout }}"'
+
+  when: tokens.stat.exists == false
+
+- name: Extract token
+  shell: cat /etc/pve/priv/token.cfg | grep terraform-prov@pve | awk '{print $NF}'
+  when: tokens.stat.exists == true
+  changed_when: false
+  register: api_token
+
+- name: Check the API connection
+  community.general.proxmox_user_info:
+    api_host: "node01.cluster01.ingeniouslycrazy.com"
+    api_user: "terraform-prov@pve"
+    api_token_id: "terraform2api"
+    api_token_secret: "{{ api_token.stdout }}"
+  delegate_to: localhost

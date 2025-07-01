@@ -1,0 +1,20 @@
+- name: Generate RSA key pair for ansible user
+  command : ssh-keygen -q -t rsa -f /srv/secrets/ansible_id_rsa -C "" -N ""
+  args:
+    creates: /srv/secrets/ansible_id_rsa
+
+- name: Fix permissions for RSA key directory
+  file:
+    path: /srv/secrets
+    owner: root
+    group: root
+    mode: '0600'
+    state: directory
+
+- name: Fix permissions for secrets directory
+  file:
+    path: /srv/secrets/ansible_id_rsa
+    owner: root
+    group: root
+    mode: '0700'
+    state: file

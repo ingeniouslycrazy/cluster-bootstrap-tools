@@ -1,15 +1,15 @@
 terraform {
   required_providers {
     proxmox = {
-      source = "telmate/proxmox"
-      version = "2.9.14"
+      source = "bpg/proxmox"
+      version = "0.78.2"
     }
   }
   backend "local" {
-    path = "/.state/terraform.tfstate"
+    path = "/srv/terraform.tfstate"
   }
 }
 
 provider "proxmox" {
-  pm_tls_insecure = true
+  # Configuration options
 }

@@ -1,0 +1,17 @@
+- name: "Create group '{{ user_group_name }}'"
+  group:
+    name: "{{ user_group_name }}"
+    state: present
+
+- name: "Create user '{{ user_name }}'"
+  user:
+    name: "{{ user_name }}"
+    group: "{{ user_group_name }}"
+    state: "{{ user_state }}"
+
+- name: Set authorized key
+  ansible.posix.authorized_key:
+    user: "{{ user_name }}"
+    key: "{{ user_ssh_key }}"
+    state: present
+  when: user_ssh_key != ""

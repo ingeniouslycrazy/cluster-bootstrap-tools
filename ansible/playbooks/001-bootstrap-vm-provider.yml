@@ -1,0 +1,20 @@
+- name: Bootstrap all nodes
+  hosts: linux
+  gather_facts: false
+  vars:
+    platform_environment: dev
+    ansible_user: root
+    ansible_password: "{{ initial_root_password }}"
+  roles:
+    - name: Bootstrap secrets
+      role: bootstrap_secrets
+      delegate_to: localhost
+    - name: Bootstrap nodes
+      role: bootstrap_nodes
+    
+- name: Test connection to nodes
+  hosts: linux
+  gather_facts: false
+  tasks:
+    - name: Check the default SSH connection
+      ping:

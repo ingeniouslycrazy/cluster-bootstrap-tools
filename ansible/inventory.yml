@@ -1,8 +1,14 @@
-proxmox:
-  hosts:
-    node01:
-      ansible_connection: ssh
-      ansible_host: node01.cluster01.ingeniouslycrazy.com
-      ansible_user: root
-      ansible_password: "{{ node_initial_root_password }}"
-      ansible_port: 2222
+all:
+  children:
+    proxmox:
+      hosts:
+        node01:
+          ansible_connection: ssh
+          ansible_host: node01.cluster01.ingeniouslycrazy.com
+          ansible_user: ansible
+          ansible_ssh_private_key_file: /srv/secrets/ansible_id_rsa
+          ansible_port: 2222
+
+linux:
+  children:
+    proxmox:
