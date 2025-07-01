@@ -1,0 +1,15 @@
+- name: Bootstrap service
+  hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Check the API connection
+      community.general.proxmox_user_info:
+        api_host: "node01.cluster01.ingeniouslycrazy.com"
+        api_user: "terraform-prov@pve"
+        api_token_id: "terraform2api"
+        api_token_secret: "{{ lookup('env', 'PROXMOX_VE_API_TOKEN_RAW') }}"
+      delegate_to: localhost
+
+      args:
+        creates: /var/lib/vz/template/iso/alpine-standard-3.22.0-x86_64.iso

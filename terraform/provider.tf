@@ -5,9 +5,6 @@ terraform {
       version = "0.78.2"
     }
   }
-  backend "local" {
-    path = "/srv/terraform.tfstate"
-  }
 }
 
 provider "proxmox" {

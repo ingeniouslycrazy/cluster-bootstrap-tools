@@ -32,6 +32,11 @@ RUN apk add --update --virtual .deps --no-cache gnupg && \
     rm -f /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip terraform_${TERRAFORM_VERSION}_SHA256SUMS ${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig && \
     apk del .deps
 
+# Download images
+RUN mkdir /srv/iso
+ADD https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/x86_64/alpine-standard-3.22.0-x86_64.iso /srv/iso/alpine-standard-3.22.0-x86_64.iso
+ADD https://releases.ubuntu.com/24.04.2/ubuntu-24.04.2-live-server-amd64.iso /srv/iso/ubuntu-24.04.2-live-server-amd64.iso
+
 # Copy terraform files
 COPY ./terraform /srv/terraform
 
