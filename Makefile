@@ -4,8 +4,10 @@ else
 	COMPOSE_CFG=docker-compose.yml
 endif
 
-all: bake run
+all: init bake run
 
+init:
+	@bash -l init.sh
 bake:
 	@docker buildx bake clt
 run:
